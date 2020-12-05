@@ -13,6 +13,7 @@ import {
   DropdownItem,
   NavbarText,
 } from 'reactstrap';
+import Link from 'next/link';
 
 const Navigation = (props) => {
   const { island, selectIsland } = props;
@@ -34,12 +35,16 @@ const Navigation = (props) => {
                 Real Estate
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem onClick={() => selectIsland('Kauai')}>
-                  Kauai
-                </DropdownItem>
-                <DropdownItem onClick={() => selectIsland('Molokai')}>
-                  Molokai
-                </DropdownItem>
+                <Link href="/" as="/realestate/kauai">
+                  <DropdownItem onClick={() => selectIsland('Kauai')}>
+                    Kauai
+                  </DropdownItem>
+                </Link>
+                <Link href="/" as="/realestate/molokai">
+                  <DropdownItem onClick={() => selectIsland('Molokai')}>
+                    Molokai
+                  </DropdownItem>
+                </Link>
                 <DropdownItem onClick={() => selectIsland('Oahu')}>
                   Oahu
                 </DropdownItem>

@@ -5,7 +5,7 @@ import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import Navigation from '@/components/navigation';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 // for (let i = 0; i < 23; i++) {
 //   listData.push({
@@ -34,15 +34,18 @@ const IconText = ({ icon, text }) => (
   </Space>
 );
 
-function mapReducer(state, newState) {
-  return newState;
-}
-
-export default function Home() {
+export default function Island(props) {
+  console.log(props, 'hello');
   const [listData, setListData] = React.useState([]);
   const [itemPerPage, setItemPerPage] = React.useState(10);
 
-  const [island, selectIsland] = React.useReducer(mapReducer, null);
+  const [loading, setLoading] = React.useState(1);
+  const [error, setError] = React.useState(0);
+
+  const router = useRouter();
+  const { pid } = router.query;
+
+  console.log(pid, 'pid');
 
   React.useEffect(() => {
     axios
@@ -51,50 +54,24 @@ export default function Home() {
       )
       .then(function (response) {
         setListData(response.data);
+        setLoading(0);
         console.log(response.data);
       })
       .catch(function (error) {
+        setError(1);
         console.log(error);
       });
   }, []);
 
   return (
     <>
-      <Navigation island={island} selectIsland={selectIsland} />
-      {!island && (
-        <div
-          style={{
-            opacity: 0.85,
-            paddingTop: '20px',
-            display: 'flex',
-            // width: "800px",
-          }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              zIndex: 1,
-              textAlign: 'center',
-              width: '100%',
-              top: '45%',
-            }}
-          >
-            <h1>Hero Text Here</h1>
-          </div>
-          <Image
-            // style={{ zIndex: -1 }}
-            src="/hawaii.jpg"
-            alt="hawaii"
-            width="1920"
-            height="800"
-            objectFit="cover"
-          />
-        </div>
-      )}
+      <Navigation />
       <div style={{ paddingBottom: '20px' }}>
-        {island && (
+        {error ? <div>Sorry. An error occurred.</div> : null}
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
           <List
-            style={{ paddingTop: '20px' }}
             itemLayout="vertical"
             size="large"
             pagination={{
@@ -107,23 +84,23 @@ export default function Home() {
             renderItem={(item) => (
               <List.Item
                 key={item.address.streetAddress}
-                // actions={[
-                //   <IconText
-                //     icon={StarOutlined}
-                //     text="156"
-                //     key="list-vertical-star-o"
-                //   />,
-                //   <IconText
-                //     icon={LikeOutlined}
-                //     text="156"
-                //     key="list-vertical-like-o"
-                //   />,
-                //   <IconText
-                //     icon={MessageOutlined}
-                //     text="2"
-                //     key="list-vertical-message"
-                //   />,
-                // ]}
+                actions={[
+                  <IconText
+                    icon={StarOutlined}
+                    text="156"
+                    key="list-vertical-star-o"
+                  />,
+                  <IconText
+                    icon={LikeOutlined}
+                    text="156"
+                    key="list-vertical-like-o"
+                  />,
+                  <IconText
+                    icon={MessageOutlined}
+                    text="2"
+                    key="list-vertical-message"
+                  />,
+                ]}
                 extra={
                   <img
                     width={272}
